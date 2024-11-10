@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Bar Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <style>
+        #chartContainer {
+            width: 80%;
+            margin: 0 auto;
+            overflow-y: hidden;
+        }
+
+        #visitorCounts {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .count {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .try {
+            height: 300vh;
+        }
+
+        .mobileCount {
+            display: none;
+        }
+
+        .glow-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #3498db;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+        }
+
+        /* Border Glow and Text Scaling on Hover */
+        .glow-btn:hover {
+            color: #fff;
+            border-color: #fff;
+            font-size: 20px;
+            /* Slightly larger text */
+            box-shadow: 0 0 15px rgba(9, 9, 9, 0.8), 0 0 25px rgba(255, 255, 255, 0.6);
+            /* Glowing border */
+            background-color: #2980b9;
+        }
+
+        /* Optional: Add some subtle animation for button entrance */
+        .glow-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, rgba(136, 46, 46, 0.2), rgba(255, 255, 255, 0));
+            transition: all 0.7s ease;
+            z-index: 0;
+        }
+
+        .glow-btn:hover::before {
+            top: 0;
+            left: 0;
+        }
+
+        /* To make sure the text remains on top */
+        .glow-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .parent {
+            position: relative;
+            background: #ddd5c7;
+            padding: 3% 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="try"></div>
+    <div class="parent">
+        <div id="visitorCounts">
+            <div id="desktopCount" class="count">
+                <button class="glow-btn"><span>Desktop: 24,828</span></button>
+            </div>
+            <div id="mobileCount" class="count">
+                <button style="background-color: #79d1b3;" class="glow-btn"><span>Mobile: 25,010</span></button>
+            </div>
+        </div>
+
+        <div id="chartContainer">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <script>
+        // Generate random data for 3 months (last 90 days)
+        // function Update() {
+        const labels = [];
+        const data = [];
+        let currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() - 89); // Start 90 days ago
+
+        for (let i = 0; i < 90; i++) {
+            const day = currentDate.getDate();
+            const month = currentDate.getMonth() + 1; // Months are zero-indexed
+            labels.push(`${month}/${day}`);
+            data.push(Math.floor(Math.random() * (200 - 100 + 1)) + 100); // Random between 100 and 200
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Initialize Chart.js with zero values for animation start
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Page Views',
+                    data: data.map(() => 0),  // Initial data set to 0 for animation
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(130, 134, 137, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function (context) {
+                                return `Page Views: ${context.raw}`;
+                            }
+                        }
+                    }
+                },
+                onClick: (e) => {
+                    const activePoints = myChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+                    if (activePoints.length) {
+                        const index = activePoints[0].index;
+                        console.log(`Clicked bar at index: ${index}`);
+                    }
+                }
+            }
+        });
+
+
+
+        // GSAP ScrollTrigger - Trigger animation when scrolling to the chart
+        gsap.registerPlugin(ScrollTrigger);
+
+        ScrollTrigger.create({
+            trigger: "#chartContainer",
+            start: "top 80%", // When 80% of the chart comes into view
+            onEnter: () => {
+                // Animate the bars to their actual values with staggered effect
+                data.forEach((value, index) => {
+                    gsap.to(myChart.data.datasets[0].data, {
+                        [index]: value,
+                        duration: 0.01,
+                        ease: "power4.out",
+                        opacity: 0,
+                        // Smooth easing
+                        // stagger: 0.1, // Delay between each bar's animation
+                        onUpdate: () => {
+                            myChart.update(); // Update the chart as the values change
+                        }
+                    });
+                });
+
+                // Animate the container and count labels
+                // gsap.from(" #mobileCount", {
+                //     opacity: 0,
+                //     x: 300,   // Slide in from below
+                //     duration: 1,
+                //     // ease: "power4.out",
+
+                // });
+                // gsap.from("#desktopCount", {
+                //     opacity: 0,
+                //     x: -300,   // Slide in from below
+                //     duration: 1,
+                //     // ease: "power4.out",
+
+                // });
+            }
+        });
+
+        // GSAP animations for hover effect (optional)
+        const canvas = document.getElementById('myChart');
+        canvas.addEventListener('mousemove', (e) => {
+            const activePoints = myChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+            if (activePoints.length) {
+                const index = activePoints[0].index;
+                gsap.to(myChart.data.datasets[0].backgroundColor[index], { opacity: 1, duration: 0.3 });
+            }
+        });
+
+        // Change color of bars on clicking desktop/mobile counts
+        document.getElementById('desktopCount').addEventListener('click', () => {
+            myChart.data.datasets[0].backgroundColor = 'rgba(26, 121, 209, 0.6)';
+            myChart.update();
+        });
+
+        document.getElementById('mobileCount').addEventListener('click', () => {
+            myChart.data.datasets[0].backgroundColor = 'rgba(46, 184, 138, 0.6)';
+            myChart.update();
+        });
+        const btn = document.querySelectorAll('button');
+
+        btn.forEach((button) => {
+            button.addEventListener('click', () => {
+                // Generate new random data for chart on button click
+                data.forEach((value, index) => {
+                    data[index] = Math.floor(Math.random() * (200 - 100 + 1)) + 100; // New random value between 100 and 200
+                });
+
+                // Update the chart with the new data
+                myChart.data.datasets[0].data = data;
+                myChart.update(); // Refresh the chart with the new data
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>

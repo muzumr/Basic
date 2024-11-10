@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Zoom Gallery with 3x3 Grid</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+            background: #f0f0f0;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('./ai.jpg') center/cover no-repeat;
+            overflow: hidden;
+            z-index: 1;
+            border-radius: 12px;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin: 0;
+        }
+
+        .hero button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* New 3x3 grid container */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 1fr 2fr 1fr;
+            gap: 15px;
+            height: 90vh;
+            width: 90vw;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            position: absolute;
+            top: 55%;
+            z-index: 0;
+            margin-left: 5%;
+        }
+
+        .grid-item {
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .item1 {
+            background-color: #ff6b6b;
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 99;
+        }
+
+        .iten1:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .item2 {
+            background-color: #4ecdc4;
+            grid-column: 2 / 4;
+            grid-row: 1 / 2;
+        }
+
+        .item3 {
+            background-color: #ffe66d;
+            grid-column: 1 / 2;
+            grid-row: 2 / 4;
+        }
+
+        .item5 {
+            background-color: #ff9f1c;
+
+        }
+
+        .item6 {
+            background-color: #2b2d42;
+            grid-column: 2 / 3;
+            grid-row: 3 / 4;
+        }
+
+        .item4 {
+            background-color: #f0f0f0;
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+        }
+
+        /* Responsive Design for larger screens */
+        @media (min-width: 1200px) {
+            .grid-container {
+                grid-template-columns: 1fr 2fr 1fr;
+                grid-template-rows: 1fr 2fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="parent">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Create Your Online Portfolio</h1>
+                <button>Create Your Site</button>
+            </div>
+        </section>
+
+        <div class="grid-container">
+            <div class="grid-item item1">Item 1</div>
+            <div class="grid-item item2">Item 2</div>
+            <div class="grid-item item3">Item 3</div>
+            <div class="grid-item item4">Item 4</div>
+            <div class="grid-item item5">Item 5</div>
+            <div class="grid-item item6">Item 6</div>
+            <div class="grid-item">Item 7</div>
+
+
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/gsap/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap/dist/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Initial setup for zoom-out effect for the hero section
+        gsap.to(".hero", {
+            scale: 0.4,
+            duration: 4,
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom center",
+                scrub: true,
+                pin: true
+            }
+        });
+    </script>
+</body>
+
+</html>

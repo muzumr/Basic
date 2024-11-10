@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Section</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            width: 90%;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .faq-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #444;
+            padding: 15px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-item:hover {
+            background-color: #333;
+        }
+
+        .faq-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding-top 0.4s ease;
+            padding-top: 0;
+            font-size: 1rem;
+        }
+
+        .faq-answer.open {
+            max-height: 200px;
+            padding-top: 10px;
+        }
+
+        .icon-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #333;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .faq-item:hover .icon-wrapper {
+            background-color: #555;
+        }
+
+        .icon-wrapper.rotate {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="faq-container">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>What do I need to know to take this course?</span>
+                <div class="icon-wrapper">
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="faq-answer">
+                <p>You should have a basic understanding of JavaScript, HTML, and CSS to take this course effectively.
+                </p>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>I already know Next.js, what can you teach me?</span>
+                <div class="icon-wrapper">
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="faq-answer">
+                <p>This course will delve deeper into advanced concepts of Next.js, including server-side rendering, API
+                    routes, and more.</p>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>Do you support Purchasing Power Parity (PPP)?</span>
+                <div class="icon-wrapper">
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, we do support PPP to make our course more affordable to students from different regions.</p>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>This course is too expensive for me</span>
+                <div class="icon-wrapper">
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="faq-answer">
+                <p>We understand that pricing can be a concern, and we offer discounts during special events to make the
+                    course more accessible.</p>
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>Do you offer a certificate of completion?</span>
+                <div class="icon-wrapper">
+                    <span class="icon">+</span>
+                </div>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, we offer a certificate of completion that you can showcase on your LinkedIn profile or resume.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleFaq(faqItem) {
+            const answer = faqItem.querySelector('.faq-answer');
+            const icon = faqItem.querySelector('.icon');
+
+            // Toggle the 'open' class on the answer
+            answer.classList.toggle('open');
+
+            // Change the icon from '+' to '-' and vice versa
+            if (answer.classList.contains('open')) {
+                icon.textContent = '-';
+            } else {
+                icon.textContent = '+';
+            }
+        }
+    </script>
+</body>
+
+</html>

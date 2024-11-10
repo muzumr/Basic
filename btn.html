@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shimmer Button</title>
+    <style>
+        .btn-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 10vh;
+        }
+
+        .shimmer-btn {
+            font-size: 18px;
+            padding: 10px 20px;
+            color: #c2c2c2;
+            background-color: #333;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Border becomes white on hover */
+        .shimmer-btn:hover {
+            border-color: white;
+        }
+
+        /* Shimmer effect on text */
+        .shimmer-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+            transition: all 0.5s ease;
+        }
+
+        /* Hover makes the shimmer quicker */
+        .shimmer-btn:hover::before {
+            left: 100%;
+            transition: all 0.5s ease;
+        }
+
+        /* Animation for shimmer every 4 seconds */
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            50% {
+                left: 100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Automatic shimmer every 3-4 seconds */
+        .shimmer-btn::before {
+            animation: shimmer 3s infinite;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="btn-container">
+        <div class="shimmer-btn">Shimmer</div>
+    </div>
+
+</body>
+
+</html>

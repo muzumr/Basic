@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Path Animation</title>
+</head>
+<style>
+    .string {
+        width: 100%;
+        height: 350px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: silver;
+    }
+
+    svg {
+        cursor: grab;
+    }
+</style>
+
+<body>
+    <div class="string">
+        <svg width="1000" height="500">
+            <path d="M 10 100 Q 500 100 990 100" stroke="black" fill="transparent" stroke-width="2" />
+        </svg>
+    </div>
+    <audio id="hoverAudio" src="./audio.mp3"></audio>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+        integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+        integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var Path = 'M 10 100 Q 500 100 990 100';
+        var finalPath = 'M 10 100 Q 500 100 990 100';
+
+        var string = document.querySelector('.string');
+        var svg = document.querySelector('svg');
+        var audio = document.getElementById('hoverAudio');
+
+        string.addEventListener('mousemove', function (dets) {
+            var yPos = dets.offsetY;
+            var middleY = 100;
+            var controlY = middleY + (yPos - middleY);
+            var path = `M 10 100 Q ${dets.x} ${controlY} 990 100`;
+
+            gsap.to('svg path', {
+                attr: { d: path },
+                duration: 0.2,
+                ease: 'power3.inOut',
+            });
+        });
+
+        string.addEventListener('mouseleave', function () {
+            gsap.to('svg path', {
+                attr: { d: finalPath },
+                duration: 1.5,
+                ease: 'elastic.out(1,0.2)',
+            });
+        });
+
+        // Play audio when hovering over the SVG
+        svg.addEventListener('mouseenter', function () {
+            audio.play().catch(error => {
+                console.error("Audio play failed:", error);
+            });
+        });
+
+        // Pause audio when leaving the SVG
+        svg.addEventListener('mouseleave', function () {
+            audio.pause();
+            audio.currentTime = 0;
+        });
+    </script>
+</body>
+
+</html>
